@@ -1,3 +1,3 @@
-import { BookstoreServiceProvider, BookstoreServiceConsumer } from './error-boundary';
+import ErrorBoundary from './error-boundary';
 
-export { BookstoreServiceProvider, BookstoreServiceConsumer };
+export default ErrorBoundary;
