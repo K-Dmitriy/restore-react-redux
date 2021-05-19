@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import BookListItem from '../Book-list-item';
 import './book-list.css';
@@ -13,4 +14,8 @@ const BookList = ({ books = [] }) => {
 	);
 };
 
-export default BookList;
+const mapStateToProps = ({ books }) => {
+	return { books };
+};
+
+export default connect(mapStateToProps)(BookList);
