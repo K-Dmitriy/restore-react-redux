@@ -9,20 +9,20 @@ import ErrorIndicator from '../Error-indicator';
 import BookListItem from '../Book-list-item';
 import './book-list.css';
 
-const BookList = ({ books = [], loading = false, error = null, fetchBooks }) => {
-	useEffect(fetchBooks, [fetchBooks]);
-
-	return loading ? (
-		<Spinner />
-	) : error ? (
-		<ErrorIndicator />
-	) : (
+const BookList = ({ books }) => {
+	return (
 		<ul className="book-list">
 			{books.map((book) => {
 				return <BookListItem key={book.id} {...book} />;
 			})}
 		</ul>
 	);
+};
+
+const BookListContainer = ({ books = [], loading = false, error = null, fetchBooks }) => {
+	useEffect(fetchBooks, [fetchBooks]);
+
+	return loading ? <Spinner /> : error ? <ErrorIndicator /> : <BookList books={books} />;
 };
 
 const mapStateToProps = ({ books, loading, error }) => ({ books, loading, error });
@@ -33,4 +33,7 @@ const mapDispatchToProps = (dispatch, { bookstoreService }) => {
 	};
 };
 
-export default compose(withBookstoreService(), connect(mapStateToProps, mapDispatchToProps))(BookList);
+export default compose(
+	withBookstoreService(),
+	connect(mapStateToProps, mapDispatchToProps)
+)(BookListContainer);
