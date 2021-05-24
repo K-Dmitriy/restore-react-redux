@@ -9,24 +9,8 @@ import ErrorIndicator from '../Error-indicator';
 import BookListItem from '../Book-list-item';
 import './book-list.css';
 
-const BookList = ({
-	books = [],
-	loading = false,
-	error = null,
-	bookstoreService,
-	booksLoaded,
-	booksRequested,
-	booksError,
-}) => {
-	useEffect(() => {
-		bookstoreService
-			.getBooks()
-			.then((data) => booksLoaded(data))
-			.catch((err) => booksError(err));
-
-		return booksRequested;
-		//eslint-disable-next-line
-	}, []);
+const BookList = ({ books = [], loading = false, error = null, fetchBooks }) => {
+	useEffect(fetchBooks, [fetchBooks]);
 
 	return loading ? (
 		<Spinner />
@@ -43,6 +27,19 @@ const BookList = ({
 
 const mapStateToProps = ({ books, loading, error }) => ({ books, loading, error });
 
-const mapDispatchToProps = { booksLoaded, booksRequested, booksError };
+const mapDispatchToProps = (dispatch, ownProps) => {
+	const { bookstoreService } = ownProps;
+
+	return {
+		fetchBooks: () => {
+			dispatch(booksRequested());
+
+			bookstoreService
+				.getBooks()
+				.then((data) => dispatch(booksLoaded(data)))
+				.catch((err) => dispatch(booksError(err)));
+		},
+	};
+};
 
 export default compose(withBookstoreService(), connect(mapStateToProps, mapDispatchToProps))(BookList);
